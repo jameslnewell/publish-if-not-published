@@ -1,0 +1,42 @@
+{
+  "name": "publish-if-not-published",
+  "version": "0.0.1",
+  "description": "Publish a package if the current version isn't already published.",
+  "keywords": [
+    "npm",
+    "yarn",
+    "publish",
+    "try",
+    "attempt",
+    "please"
+  ],
+  "repository": "jameslnewell/publish-if-not-published",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "bin": {
+    "publish-if-not-published": "lib/cli.js"
+  },
+  "dependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/node": "^9.4.6",
+    "@types/yargs": "^11.1.1",
+    "chalk": "^2.4.1",
+    "yargs": "^12.0.1"
+  },
+  "devDependencies": {
+    "@tradie/node-scripts": "^1.2.1",
+    "@types/jest": "^22.2.0"
+  },
+  "scripts": {
+    "clean": "node-scripts clean",
+    "build": "node-scripts build && chmod +x lib/cli.js",
+    "watch": "node-scripts build --watch",
+    "test": "node-scripts test",
+    "example": "node-scripts example",
+    "prepublishOnly": "node-scripts clean && node-scripts build && node-scripts test"
+  },
+  "license": "MIT"
+}
