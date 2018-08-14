@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* tslint:disable: no-console */
 import chalk from 'chalk';
 import * as yargs from 'yargs';
 import publish from '.';
@@ -10,18 +11,6 @@ function formatNameAndVersion(metadata: {[name: string]: any}) {
 const argv = yargs.argv;
 
 (async () => {
-  let metadata;
-
-  try {
-    metadata = require(`${process.cwd()}/package.json`);
-  } catch (error) {
-
-  }
-
-  if (metadata.private) {
-    
-  }
-
   try {
     const {published, reason, manifest} = await publish({args: argv._});
 

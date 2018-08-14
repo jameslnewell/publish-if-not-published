@@ -15,7 +15,7 @@ export default function publish(options: PublishOptions = {}): Promise<PublishRe
   return new Promise((resolve, reject) => {
     const {cwd = process.cwd(), args = []} = options;
 
-    let manifest;
+    let manifest: {[name: string]: any};
     try {
       manifest = require(`${cwd}/package.json`);
     } catch (metaError) {
