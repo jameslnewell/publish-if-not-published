@@ -1,6 +1,6 @@
 {
   "name": "publish-if-not-published",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Publish a package if the current version isn't already published.",
   "keywords": [
     "npm",
@@ -20,7 +20,6 @@
     "publish-if-not-published": "lib/cli.js"
   },
   "dependencies": {
-    "@types/chalk": "^2.2.0",
     "@types/node": "^9.4.6",
     "@types/yargs": "^11.1.1",
     "chalk": "^2.4.1",
