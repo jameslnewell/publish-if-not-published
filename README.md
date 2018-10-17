@@ -2,7 +2,7 @@
 
 Publish a package if the current version isn't already published.
 
-![A list of packages published with publish-if-not-published](https://github.com/jameslnewell/publish-if-not-published/blob/master/screenshot.jpg)
+![A list of packages published with publish-if-not-published](https://raw.githubusercontent.com/jameslnewell/publish-if-not-published/master/screenshot.jpg)
 
 ## Installation
 
