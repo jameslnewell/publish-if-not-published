@@ -15,7 +15,7 @@ const argv = yargs.argv;
     const {published, reason, manifest} = await publish({args: argv._});
 
     if (published) {
-      console.log(`✅ Published ${formatNameAndVersion(manifest)}.`);
+      console.log(`✅ Published ${formatNameAndVersion(manifest)}`);
       return;
     }
 
