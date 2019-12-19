@@ -20,6 +20,7 @@ describe('getTagFromArgs', () => {
     expect(getTagFromArgs(['--registry', 'https://registry.npmjs.org/'])).toBeUndefined();
     expect(getTagFromArgs(['--foo', 'bar', '--baz', 'buzz'])).toBeUndefined();
     expect(getTagFromArgs(['--tag'])).toBeUndefined();
+    expect(getTagFromArgs(['--tag', 'latest'])).toBeUndefined();
   });
   it('should return the next item in the args array if tag is set', () => {
     expect(getTagFromArgs(['--tag', 'next'])).toEqual('next');

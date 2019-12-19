@@ -8,7 +8,9 @@ export interface PublishOptions {
 
 export function getTagFromArgs(args: string[] = []) {
   if (args.includes("--tag")) {
-    return args[args.indexOf("--tag") + 1];
+    const tagValue = args[args.indexOf("--tag") + 1]
+    // latest is the default
+    return tagValue === 'latest' ? undefined : tagValue;
   }
   return;
 }
