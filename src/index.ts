@@ -6,7 +6,7 @@ export interface PublishOptions {
   args?: string[];
 }
 
-function getTagFromArgs(args: string[]) {
+export function getTagFromArgs(args: string[] = []) {
   if (args.includes("--tag")) {
     return args[args.indexOf("--tag") + 1];
   }

@@ -1,4 +1,4 @@
-import {isPrerelease} from '.';
+import {isPrerelease, getTagFromArgs} from './index';
 
 describe('isPrerelease', () => {
   it('should return false for non-suffixed versions', () => {
@@ -11,5 +11,18 @@ describe('isPrerelease', () => {
     expect(isPrerelease('0.0.2-rc')).toBeTruthy();
     expect(isPrerelease('5.2.17-next.123asdcq24raq2')).toBeTruthy();
     expect(isPrerelease('12.8.3-preview.85')).toBeTruthy();
+  });
+});
+
+describe('getTagFromArgs', () => {
+  it('should return undefined if no dist-tag set', () => {
+    expect(getTagFromArgs()).toBeUndefined();
+    expect(getTagFromArgs(['--registry', 'https://registry.npmjs.org/'])).toBeUndefined();
+    expect(getTagFromArgs(['--foo', 'bar', '--baz', 'buzz'])).toBeUndefined();
+    expect(getTagFromArgs(['--tag'])).toBeUndefined();
+  });
+  it('should return the next item in the args array if tag is set', () => {
+    expect(getTagFromArgs(['--tag', 'next'])).toEqual('next');
+    expect(getTagFromArgs(['--foo', 'bar', '--tag', 'preview', '--baz', 'buzz'])).toEqual('preview');
   });
 });
