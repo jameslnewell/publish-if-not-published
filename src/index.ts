@@ -1,14 +1,33 @@
 import {exec} from 'child_process';
+import * as semver from 'semver';
 
 export interface PublishOptions {
   cwd?: string;
   args?: string[];
 }
 
+function getTagFromArgs(args: string[]) {
+  if (args.includes("--tag")) {
+    return args[args.indexOf("--tag") + 1];
+  }
+  return;
+}
+
+export function isPrerelease(version: string) {
+  // semver.prerelease(version) returns an array of prerelease components, or null if none exist
+  // e.g. prerelease('1.2.3-alpha.1') -> ['alpha', 1]
+  return semver.prerelease(version) !== null;
+}
+
 export interface PublishResult {
   published: boolean;
-  reason: 'private' | 'already-published' | undefined;
-  manifest: {[name: string]: any};
+  reason:
+    | "private"
+    | "already-published"
+    | "missing-suffix"
+    | "extraneous-suffix"
+    | undefined;
+  manifest: { [name: string]: any };
 }
 
 export default function publish(options: PublishOptions = {}): Promise<PublishResult> {
@@ -23,6 +42,9 @@ export default function publish(options: PublishOptions = {}): Promise<PublishRe
       return;
     }
 
+    const hasDistTag = getTagFromArgs(args);
+    const hasSuffix = isPrerelease(manifest.version);
+
     if (manifest.private) {
       resolve({
         published: false,
@@ -32,7 +54,25 @@ export default function publish(options: PublishOptions = {}): Promise<PublishRe
       return;
     }
 
-    const cmd = `npm publish ${args.join(' ')}`;
+    if (hasDistTag && !hasSuffix) {
+      resolve({
+        published: false,
+        reason: 'missing-suffix',
+        manifest
+      });
+      return;
+    }
+
+    if (!hasDistTag && hasSuffix) {
+      resolve({
+        published: false,
+        reason: 'extraneous-suffix',
+        manifest
+      });
+      return;
+    }
+
+    const cmd = `npm publish ${args.join(" ")}`;
     exec(cmd, {cwd}, (execError) => {
       if (execError) {
         if (/You cannot publish over the previously published versions/.test(execError.message)) {
@@ -52,5 +92,5 @@ export default function publish(options: PublishOptions = {}): Promise<PublishRe
         });
       }
     });
-  });  
+  });
 }
