@@ -4,7 +4,7 @@ import * as semver from 'semver';
 export interface PublishOptions {
   cwd?: string;
   args?: string[];
-  shouldCheckDistTag?: boolean;
+  shouldCheckTag?: boolean;
 }
 
 export function getTagFromArgs(args: string[] = []) {
@@ -35,7 +35,7 @@ export interface PublishResult {
 
 export default function publish(options: PublishOptions = {}): Promise<PublishResult> {
   return new Promise((resolve, reject) => {
-    const {cwd = process.cwd(), shouldCheckDistTag = true, args = []} = options;
+    const {cwd = process.cwd(), shouldCheckTag = true, args = []} = options;
 
     let manifest: {[name: string]: any};
     try {
@@ -45,7 +45,7 @@ export default function publish(options: PublishOptions = {}): Promise<PublishRe
       return;
     }
 
-    const hasDistTag = getTagFromArgs(args);
+    const hasTag = getTagFromArgs(args);
     const hasSuffix = isPrerelease(manifest.version);
 
     if (manifest.private) {
@@ -57,8 +57,8 @@ export default function publish(options: PublishOptions = {}): Promise<PublishRe
       return;
     }
 
-    if (shouldCheckDistTag) {
-      if (hasDistTag && !hasSuffix) {
+    if (shouldCheckTag) {
+      if (hasTag && !hasSuffix) {
         resolve({
           published: false,
           reason: 'missing-suffix',
@@ -67,7 +67,7 @@ export default function publish(options: PublishOptions = {}): Promise<PublishRe
         return;
       }
 
-      if (!hasDistTag && hasSuffix) {
+      if (!hasTag && hasSuffix) {
         resolve({
           published: false,
           reason: 'extraneous-suffix',
