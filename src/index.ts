@@ -4,7 +4,7 @@ import * as semver from 'semver';
 export interface PublishOptions {
   cwd?: string;
   args?: string[];
-  tagCheck?: boolean;
+  shouldCheckDistTag?: boolean;
 }
 
 export function getTagFromArgs(args: string[] = []) {
@@ -35,7 +35,7 @@ export interface PublishResult {
 
 export default function publish(options: PublishOptions = {}): Promise<PublishResult> {
   return new Promise((resolve, reject) => {
-    const {cwd = process.cwd(), tagCheck = true, args = []} = options;
+    const {cwd = process.cwd(), shouldCheckDistTag = true, args = []} = options;
 
     let manifest: {[name: string]: any};
     try {
@@ -57,7 +57,7 @@ export default function publish(options: PublishOptions = {}): Promise<PublishRe
       return;
     }
 
-    if (tagCheck) {
+    if (shouldCheckDistTag) {
       if (hasDistTag && !hasSuffix) {
         resolve({
           published: false,

@@ -38,8 +38,8 @@ When specifing a non-latest tag to be published, a suffix should also be appende
 1. Accidentally publishing a tagged release with a non-suffixed version, or 
 1. Accidentally publishing a latest release with a suffixed version.
 
-These checks can be turned off with the `--no-tag-check` flag:
+These checks can be turned off with the `--no-dist-tag-check` flag:
 
 ```bash
-"$(yarn bin)/publish-if-not-published" --no-tag-check -- --tag rc
+"$(yarn bin)/publish-if-not-published" --no-dist-tag-check -- --tag rc
 ```
