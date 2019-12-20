@@ -4,6 +4,7 @@ import * as semver from 'semver';
 export interface PublishOptions {
   cwd?: string;
   args?: string[];
+  tagCheck?: boolean;
 }
 
 export function getTagFromArgs(args: string[] = []) {
@@ -34,7 +35,7 @@ export interface PublishResult {
 
 export default function publish(options: PublishOptions = {}): Promise<PublishResult> {
   return new Promise((resolve, reject) => {
-    const {cwd = process.cwd(), args = []} = options;
+    const {cwd = process.cwd(), tagCheck = true, args = []} = options;
 
     let manifest: {[name: string]: any};
     try {
@@ -56,22 +57,24 @@ export default function publish(options: PublishOptions = {}): Promise<PublishRe
       return;
     }
 
-    if (hasDistTag && !hasSuffix) {
-      resolve({
-        published: false,
-        reason: 'missing-suffix',
-        manifest
-      });
-      return;
-    }
+    if (tagCheck) {
+      if (hasDistTag && !hasSuffix) {
+        resolve({
+          published: false,
+          reason: 'missing-suffix',
+          manifest
+        });
+        return;
+      }
 
-    if (!hasDistTag && hasSuffix) {
-      resolve({
-        published: false,
-        reason: 'extraneous-suffix',
-        manifest
-      });
-      return;
+      if (!hasDistTag && hasSuffix) {
+        resolve({
+          published: false,
+          reason: 'extraneous-suffix',
+          manifest
+        });
+        return;
+      }
     }
 
     const cmd = `npm publish ${args.join(" ")}`;

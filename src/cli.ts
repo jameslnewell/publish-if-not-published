@@ -12,7 +12,7 @@ const argv = yargs.argv;
 
 (async () => {
   try {
-    const {published, reason, manifest} = await publish({args: argv._});
+    const {published, reason, manifest} = await publish({tagCheck: argv.tagCheck, args: argv._});
 
     if (published) {
       console.log(`✅ Published ${formatNameAndVersion(manifest)}`);
