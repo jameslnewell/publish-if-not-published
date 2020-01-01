@@ -1,5 +1,6 @@
 import {exec} from 'child_process';
 import * as semver from 'semver';
+import * as yargs from 'yargs-parser';
 
 export interface PublishOptions {
   cwd?: string;
@@ -8,12 +9,13 @@ export interface PublishOptions {
 }
 
 export function getTagFromArgs(args: string[] = []) {
-  if (args.includes("--tag")) {
-    const tagValue = args[args.indexOf("--tag") + 1]
-    // latest is the default
-    return tagValue === 'latest' ? undefined : tagValue;
-  }
-  return;
+  const argv = yargs(args, {
+    narg: {
+      tag: 1
+    },
+    string: ['tag']
+  });
+  return argv.tag === 'latest' ? undefined : argv.tag
 }
 
 export function isPrerelease(version: string) {

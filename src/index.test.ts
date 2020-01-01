@@ -21,8 +21,10 @@ describe('getTagFromArgs', () => {
     expect(getTagFromArgs(['--foo', 'bar', '--baz', 'buzz'])).toBeUndefined();
     expect(getTagFromArgs(['--tag'])).toBeUndefined();
     expect(getTagFromArgs(['--tag', 'latest'])).toBeUndefined();
+    expect(getTagFromArgs(['--tag=latest'])).toBeUndefined();
   });
   it('should return the next item in the args array if tag is set', () => {
+    expect(getTagFromArgs(['--tag=next'])).toEqual('next');
     expect(getTagFromArgs(['--tag', 'next'])).toEqual('next');
     expect(getTagFromArgs(['--foo', 'bar', '--tag', 'preview', '--baz', 'buzz'])).toEqual('preview');
   });
