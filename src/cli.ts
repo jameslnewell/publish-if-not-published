@@ -12,7 +12,7 @@ const argv = yargs.argv;
 
 (async () => {
   try {
-    const {published, reason, manifest} = await publish({args: argv._});
+    const {published, reason, manifest} = await publish({shouldCheckTag: argv.tagCheck, args: argv._});
 
     if (published) {
       console.log(`✅ Published ${formatNameAndVersion(manifest)}`);
@@ -29,6 +29,15 @@ const argv = yargs.argv;
       return;
     }
 
+    if (reason === "missing-suffix") {
+      console.log(`⚠️  Skipped publishing ${formatNameAndVersion(manifest)} because the package is being published as a ${chalk.bold.white("non-latest")} tag and the version has no suffix.`);
+      return;
+    }
+
+    if (reason === "extraneous-suffix") {
+      console.log(`⚠️  Skipped publishing ${formatNameAndVersion(manifest)} because the package is being published as ${chalk.bold.white("latest")} but the version has an extraneous suffix.`);
+      return;
+    }
   } catch (error) {
     console.log(`❌ Failed to publish package:`);
     console.log();

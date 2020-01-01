@@ -1,19 +1,41 @@
 import {exec} from 'child_process';
+import * as semver from 'semver';
 
 export interface PublishOptions {
   cwd?: string;
   args?: string[];
+  shouldCheckTag?: boolean;
+}
+
+export function getTagFromArgs(args: string[] = []) {
+  if (args.includes("--tag")) {
+    const tagValue = args[args.indexOf("--tag") + 1]
+    // latest is the default
+    return tagValue === 'latest' ? undefined : tagValue;
+  }
+  return;
+}
+
+export function isPrerelease(version: string) {
+  // semver.prerelease(version) returns an array of prerelease components, or null if none exist
+  // e.g. prerelease('1.2.3-alpha.1') -> ['alpha', 1]
+  return semver.prerelease(version) !== null;
 }
 
 export interface PublishResult {
   published: boolean;
-  reason: 'private' | 'already-published' | undefined;
-  manifest: {[name: string]: any};
+  reason:
+    | "private"
+    | "already-published"
+    | "missing-suffix"
+    | "extraneous-suffix"
+    | undefined;
+  manifest: { [name: string]: any };
 }
 
 export default function publish(options: PublishOptions = {}): Promise<PublishResult> {
   return new Promise((resolve, reject) => {
-    const {cwd = process.cwd(), args = []} = options;
+    const {cwd = process.cwd(), shouldCheckTag = true, args = []} = options;
 
     let manifest: {[name: string]: any};
     try {
@@ -22,6 +44,9 @@ export default function publish(options: PublishOptions = {}): Promise<PublishRe
       reject(metaError);
       return;
     }
+
+    const hasTag = getTagFromArgs(args);
+    const hasSuffix = isPrerelease(manifest.version);
 
     if (manifest.private) {
       resolve({
@@ -32,7 +57,27 @@ export default function publish(options: PublishOptions = {}): Promise<PublishRe
       return;
     }
 
-    const cmd = `npm publish ${args.join(' ')}`;
+    if (shouldCheckTag) {
+      if (hasTag && !hasSuffix) {
+        resolve({
+          published: false,
+          reason: 'missing-suffix',
+          manifest
+        });
+        return;
+      }
+
+      if (!hasTag && hasSuffix) {
+        resolve({
+          published: false,
+          reason: 'extraneous-suffix',
+          manifest
+        });
+        return;
+      }
+    }
+
+    const cmd = `npm publish ${args.join(" ")}`;
     exec(cmd, {cwd}, (execError) => {
       if (execError) {
         if (/You cannot publish over the previously published versions/.test(execError.message)) {
@@ -52,5 +97,5 @@ export default function publish(options: PublishOptions = {}): Promise<PublishRe
         });
       }
     });
-  });  
+  });
 }
