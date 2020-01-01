@@ -1,6 +1,6 @@
 {
   "name": "publish-if-not-published",
-  "version": "2.0.0-preview.2",
+  "version": "2.0.0-preview.3",
   "description": "Publish a package if the current version isn't already published.",
   "keywords": [
     "npm",
@@ -20,13 +20,13 @@
     "publish-if-not-published": "lib/cli.js"
   },
   "dependencies": {
-    "@types/node": "^9.4.6",
+    "@types/node": "^13.1.2",
     "@types/semver": "^6.2.0",
-    "@types/yargs": "^11.1.1",
+    "@types/yargs": "^13.0.4",
     "@types/yargs-parser": "^13.1.0",
-    "chalk": "^2.4.1",
+    "chalk": "^3.0.0",
     "semver": "^7.1.1",
-    "yargs": "^12.0.1",
+    "yargs": "^15.0.2",
     "yargs-parser": "^16.1.0"
   },
   "devDependencies": {

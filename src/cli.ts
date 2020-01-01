@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* tslint:disable: no-console */
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import * as yargs from 'yargs';
 import publish from '.';
 
@@ -12,7 +12,7 @@ const argv = yargs.argv;
 
 (async () => {
   try {
-    const {published, reason, manifest} = await publish({shouldCheckTag: argv.tagCheck, args: argv._});
+    const {published, reason, manifest} = await publish({shouldCheckTag: Boolean(argv.tagCheck), args: argv._});
 
     if (published) {
       console.log(`✅ Published ${formatNameAndVersion(manifest)}`);
