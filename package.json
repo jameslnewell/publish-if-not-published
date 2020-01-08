@@ -1,6 +1,6 @@
 {
   "name": "publish-if-not-published",
-  "version": "2.0.0-preview.3",
+  "version": "2.0.0",
   "description": "Publish a package if the current version isn't already published.",
   "keywords": [
     "npm",
