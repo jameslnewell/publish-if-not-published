@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 /* tslint:disable: no-console */
+import 'regenerator-runtime/runtime';
 import * as chalk from 'chalk';
 import * as yargs from 'yargs';
 import publish from '.';
 
-function formatNameAndVersion(metadata: {[name: string]: any}) {
+function formatNameAndVersion(metadata: {[name: string]: any}): string {
   return `${chalk.bold.white(metadata.name)}${chalk.bold.grey(
     '@',
   )}${chalk.bold.white(metadata.version)}`;

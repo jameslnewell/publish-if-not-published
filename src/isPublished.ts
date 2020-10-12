@@ -1,6 +1,6 @@
 import {exec} from 'child_process';
 
-export function isPublished(name: string, version: string) {
+export function isPublished(name: string, version: string): Promise<boolean> {
   return new Promise((resolve, reject) => {
     const cmd = `npm info ${name} versions --json`;
     exec(cmd, (execError, stdout) => {

@@ -2,6 +2,8 @@ import * as child_process from 'child_process';
 import * as utilities from './utilities';
 import publish, {PublishResultReason} from '.';
 
+jest.mock('child_process');
+
 const manifestWithNormalVersion = {
   name: 'test-package',
   version: '1.2.3',
@@ -11,24 +13,30 @@ describe('publish()', () => {
   const execSpy = jest.spyOn(child_process, 'exec');
   const readJSONSpy = jest.spyOn(utilities, 'readJSON');
 
-  const setupPackageJSON = (manifest: any = manifestWithNormalVersion) => {
+  const setupPackageJSON = (
+    manifest: any = manifestWithNormalVersion,
+  ): void => {
     readJSONSpy.mockReturnValue(Promise.resolve(manifest));
   };
 
-  const setupPackageJSONError = (error: any) => {
+  const setupPackageJSONError = (error: any): void => {
     readJSONSpy.mockReturnValue(Promise.reject(error));
   };
 
-  const setupNPMPublishSuccess = () => {
-    execSpy.mockImplementation(function (cmd, opts, callback) {
-      callback(null, '', '');
+  const setupNPMPublishSuccess = (): void => {
+    execSpy.mockImplementation(function (_cmd, _opts, callback) {
+      callback?.(null, '', '');
+      // eslint-disable-next-line
+      // @ts-ignore
       return this;
     });
   };
 
-  const setupNPMPublishError = (error: any) => {
-    execSpy.mockImplementation(function (cmd, opts, callback) {
-      callback(error, '', '');
+  const setupNPMPublishError = (error: child_process.ExecException): void => {
+    execSpy.mockImplementation(function (_cmd, _opts, callback) {
+      callback?.(error, '', '');
+      // eslint-disable-next-line
+      // @ts-ignore
       return this;
     });
   };
@@ -138,9 +146,12 @@ describe('publish()', () => {
   });
 
   test('rejects when the NPM publish command is unsuccessful', async () => {
-    const errorMessage = 'Uh oh!';
+    const errorMessage = {
+      name: 'error',
+      message: 'Uh oh!',
+    };
     setupPackageJSON();
     setupNPMPublishError(errorMessage);
-    await expect(publish({})).rejects.toMatch(errorMessage);
+    await expect(publish({})).rejects.toEqual(errorMessage);
   });
 });

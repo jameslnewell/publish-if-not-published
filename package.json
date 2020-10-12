@@ -20,35 +20,59 @@
     "publish-if-not-published": "lib/cli.js"
   },
   "dependencies": {
-    "@jameslnewell/jest-preset": "^2.0.0",
-    "@jameslnewell/prettier-config": "^1.0.1",
-    "@jameslnewell/typescript-config": "^3.0.0",
     "@types/node": "^14.11.8",
     "@types/semver": "^7.3.4",
     "@types/yargs": "^15.0.8",
     "@types/yargs-parser": "^15.0.0",
     "chalk": "^4.1.0",
+    "regenerator-runtime": "^0.13.7",
     "semver": "^7.3.2",
     "yargs": "^16.0.3",
     "yargs-parser": "^20.2.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@jameslnewell/babel-preset": "^2.1.0",
     "@jameslnewell/editor-config": "^1.0.1",
-    "@tradie/node-scripts": "^1.2.1",
+    "@jameslnewell/eslint-config": "^0.16.0",
+    "@jameslnewell/jest-preset": "^2.0.0",
+    "@jameslnewell/prettier-config": "^1.0.1",
+    "@jameslnewell/typescript-config": "^3.0.0",
     "@types/jest": "^26.0.14",
+    "eslint": "^7.11.0",
     "husky": "^4.3.0",
+    "jest": "^26.5.3",
     "prettier": "^2.1.2",
-    "pretty-quick": "^3.0.2"
+    "pretty-quick": "^3.0.2",
+    "typescript": "^4.0.3"
+  },
+  "babel": {
+    "presets": [
+      "@jameslnewell/babel-preset"
+    ]
+  },
+  "eslintConfig": {
+    "extends": "@jameslnewell/eslint-config"
+  },
+  "jest": {
+    "preset": "@jameslnewell/jest-preset",
+    "testEnvironment": "node"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "prettier": "@jameslnewell/prettier-config",
   "scripts": {
     "format": "prettier --write .",
-    "clean": "node-scripts clean",
-    "build": "node-scripts build && chmod +x lib/cli.js",
-    "watch": "node-scripts build --watch",
-    "test": "node-scripts test",
-    "example": "node-scripts example index -- --tag=next",
-    "prepublishOnly": "node-scripts clean && node-scripts build && node-scripts test"
+    "clean": "rm -rf lib",
+    "lint": "eslint .",
+    "type": "tsc",
+    "build": "babel src --out-dir lib --extensions .ts,.tsx && chmod +x lib/cli.js",
+    "test": "jest",
+    "prepublishOnly": "yarn run clean && yarn run lint && yarn run type && yarn run build && yarn run test"
   },
   "license": "MIT"
 }
