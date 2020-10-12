@@ -27,7 +27,7 @@
     "chalk": "^3.0.0",
     "semver": "^7.1.1",
     "yargs": "^15.0.2",
-    "yargs-parser": "^16.1.0"
+    "yargs-parser": "^18.1.2"
   },
   "devDependencies": {
     "@tradie/node-scripts": "^1.2.1",
