@@ -1,5 +1,7 @@
 # publish-if-not-published
 
+[![Main Actions Status](https://github.com/jameslnewell/publish-if-not-published/workflows/main/badge.svg)](https://github.com/jameslnewell/publish-if-not-published/actions)
+
 Publish a package if the current version isn't already published.
 
 ![A list of packages published with publish-if-not-published](https://raw.githubusercontent.com/jameslnewell/publish-if-not-published/master/screenshot.jpg)
