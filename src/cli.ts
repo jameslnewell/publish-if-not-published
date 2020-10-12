@@ -42,6 +42,6 @@ const argv = yargs.argv;
     console.log(`❌ Failed to publish package:`);
     console.log();
     console.error(error.message);
-    process.exit(1);
+    process.exitCode = 1;
   }
 })();

@@ -20,6 +20,7 @@
     "publish-if-not-published": "lib/cli.js"
   },
   "dependencies": {
+    "@jameslnewell/editor-config": "^1.0.1",
     "@types/node": "^13.1.2",
     "@types/semver": "^6.2.0",
     "@types/yargs": "^13.0.4",
