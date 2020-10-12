@@ -17,7 +17,9 @@ describe('isPrerelease', () => {
 describe('getTagFromArgs', () => {
   it('should return undefined if no dist-tag set', () => {
     expect(getTagFromArgs()).toBeUndefined();
-    expect(getTagFromArgs(['--registry', 'https://registry.npmjs.org/'])).toBeUndefined();
+    expect(
+      getTagFromArgs(['--registry', 'https://registry.npmjs.org/']),
+    ).toBeUndefined();
     expect(getTagFromArgs(['--foo', 'bar', '--baz', 'buzz'])).toBeUndefined();
     expect(getTagFromArgs(['--tag'])).toBeUndefined();
     expect(getTagFromArgs(['--tag', 'latest'])).toBeUndefined();
@@ -26,6 +28,8 @@ describe('getTagFromArgs', () => {
   it('should return the next item in the args array if tag is set', () => {
     expect(getTagFromArgs(['--tag=next'])).toEqual('next');
     expect(getTagFromArgs(['--tag', 'next'])).toEqual('next');
-    expect(getTagFromArgs(['--foo', 'bar', '--tag', 'preview', '--baz', 'buzz'])).toEqual('preview');
+    expect(
+      getTagFromArgs(['--foo', 'bar', '--tag', 'preview', '--baz', 'buzz']),
+    ).toEqual('preview');
   });
 });

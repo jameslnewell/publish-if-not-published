@@ -16,16 +16,15 @@ export enum PublishResultReason {
 
 export interface PublishResult {
   published: boolean;
-  reason:
-    | PublishResultReason
-    | undefined;
-  manifest: { [name: string]: any };
+  reason: PublishResultReason | undefined;
+  manifest: {[name: string]: any};
 }
 
-export default async function publish(options: PublishOptions = {}): Promise<PublishResult> {
+export default async function publish(
+  options: PublishOptions = {},
+): Promise<PublishResult> {
   const {cwd = process.cwd(), shouldCheckTag = true, args = []} = options;
-
-  let manifest: {[name: string]: any} = await readJSON(`${cwd}/package.json`);
+  const manifest: {[name: string]: any} = await readJSON(`${cwd}/package.json`);
 
   const hasTag = getTagFromArgs(args);
   const hasSuffix = isPrerelease(manifest.version);
@@ -34,7 +33,7 @@ export default async function publish(options: PublishOptions = {}): Promise<Pub
     return {
       published: false,
       reason: PublishResultReason.PRIVATE,
-      manifest
+      manifest,
     };
   }
 
@@ -43,7 +42,7 @@ export default async function publish(options: PublishOptions = {}): Promise<Pub
       return {
         published: false,
         reason: PublishResultReason.MISSING_SUFFIX,
-        manifest
+        manifest,
       };
     }
 
@@ -51,20 +50,24 @@ export default async function publish(options: PublishOptions = {}): Promise<Pub
       return {
         published: false,
         reason: PublishResultReason.EXTRANEOUS_SUFFIX,
-        manifest
+        manifest,
       };
     }
   }
 
-  return new Promise(async (resolve, reject) => {
-    const cmd = `npm publish ${args.join(" ")}`;
+  return new Promise((resolve, reject) => {
+    const cmd = `npm publish ${args.join(' ')}`;
     exec(cmd, {cwd}, (execError) => {
       if (execError) {
-        if (/You cannot publish over the previously published versions/.test(execError.message)) {
+        if (
+          /You cannot publish over the previously published versions/.test(
+            execError.message,
+          )
+        ) {
           resolve({
             published: false,
             reason: PublishResultReason.ALREADY_PUBLISHED,
-            manifest
+            manifest,
           });
         } else {
           reject(execError);
@@ -73,7 +76,7 @@ export default async function publish(options: PublishOptions = {}): Promise<Pub
         resolve({
           published: true,
           reason: undefined,
-          manifest
+          manifest,
         });
       }
     });

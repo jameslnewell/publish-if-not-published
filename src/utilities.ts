@@ -12,11 +12,11 @@ export async function readJSON(file: string): Promise<any> {
 export function getTagFromArgs(args: string[] = []) {
   const argv = yargs(args, {
     narg: {
-      tag: 1
+      tag: 1,
     },
-    string: ['tag']
+    string: ['tag'],
   });
-  return argv.tag === 'latest' ? undefined : argv.tag
+  return argv.tag === 'latest' ? undefined : argv.tag;
 }
 
 export function isPrerelease(version: string) {

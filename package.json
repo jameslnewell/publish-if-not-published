@@ -20,21 +20,29 @@
     "publish-if-not-published": "lib/cli.js"
   },
   "dependencies": {
-    "@jameslnewell/editor-config": "^1.0.1",
-    "@types/node": "^13.1.2",
-    "@types/semver": "^6.2.0",
-    "@types/yargs": "^13.0.4",
-    "@types/yargs-parser": "^13.1.0",
-    "chalk": "^3.0.0",
-    "semver": "^7.1.1",
-    "yargs": "^15.0.2",
-    "yargs-parser": "^18.1.2"
+    "@jameslnewell/jest-preset": "^2.0.0",
+    "@jameslnewell/prettier-config": "^1.0.1",
+    "@jameslnewell/typescript-config": "^3.0.0",
+    "@types/node": "^14.11.8",
+    "@types/semver": "^7.3.4",
+    "@types/yargs": "^15.0.8",
+    "@types/yargs-parser": "^15.0.0",
+    "chalk": "^4.1.0",
+    "semver": "^7.3.2",
+    "yargs": "^16.0.3",
+    "yargs-parser": "^20.2.1"
   },
   "devDependencies": {
+    "@jameslnewell/editor-config": "^1.0.1",
     "@tradie/node-scripts": "^1.2.1",
-    "@types/jest": "^22.2.0"
+    "@types/jest": "^26.0.14",
+    "husky": "^4.3.0",
+    "prettier": "^2.1.2",
+    "pretty-quick": "^3.0.2"
   },
+  "prettier": "@jameslnewell/prettier-config",
   "scripts": {
+    "format": "prettier --write .",
     "clean": "node-scripts clean",
     "build": "node-scripts build && chmod +x lib/cli.js",
     "watch": "node-scripts build --watch",
