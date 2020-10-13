@@ -11,13 +11,16 @@ function formatNameAndVersion(metadata: {[name: string]: any}): string {
   )}${chalk.bold.white(metadata.version)}`;
 }
 
-const argv = yargs.option('tag-check', {default: true}).argv;
+const argv = yargs
+  .option('tag-check', {type: 'boolean', default: true})
+  .option('max-buffer', {type: 'number'}).argv;
 
 (async () => {
   try {
     const {published, reason, manifest} = await publish({
-      shouldCheckTag: Boolean(argv.tagCheck),
+      shouldCheckTag: argv['tag-check'],
       args: argv._,
+      maxBuffer: argv['max-buffer'],
     });
 
     if (published) {

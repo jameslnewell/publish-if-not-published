@@ -5,6 +5,7 @@ export interface PublishOptions {
   cwd?: string;
   args?: string[];
   shouldCheckTag?: boolean;
+  maxBuffer?: number;
 }
 
 export enum PublishResultReason {
@@ -23,7 +24,12 @@ export interface PublishResult {
 export default async function publish(
   options: PublishOptions = {},
 ): Promise<PublishResult> {
-  const {cwd = process.cwd(), shouldCheckTag = true, args = []} = options;
+  const {
+    cwd = process.cwd(),
+    shouldCheckTag = true,
+    args = [],
+    maxBuffer,
+  } = options;
   const manifest: {[name: string]: any} = await readJSON(`${cwd}/package.json`);
 
   const hasTag = getTagFromArgs(args);
@@ -57,7 +63,7 @@ export default async function publish(
 
   return new Promise((resolve, reject) => {
     const cmd = `npm publish ${args.join(' ')}`;
-    exec(cmd, {cwd}, (execError) => {
+    exec(cmd, {cwd, maxBuffer}, (execError) => {
       if (execError) {
         if (
           /You cannot publish over the previously published versions/.test(
