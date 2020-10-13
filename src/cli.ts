@@ -11,7 +11,7 @@ function formatNameAndVersion(metadata: {[name: string]: any}): string {
   )}${chalk.bold.white(metadata.version)}`;
 }
 
-const argv = yargs.argv;
+const argv = yargs.option('tag-check', {default: true}).argv;
 
 (async () => {
   try {

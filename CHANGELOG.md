@@ -3,6 +3,7 @@
 ### 2.1.0
 
 - Added tests and updated all the dependencies
+- Fixed `--tag-check` behaviour to be on by default
 
 ### 2.0.0
 
