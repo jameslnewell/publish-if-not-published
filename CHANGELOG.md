@@ -1,5 +1,9 @@
 ## Change log
 
+### 2.2.1
+
+- Updated to handle slightly modified text for already published version
+
 ### 2.2.0
 
 - Added `--max-buffer` flag to support large std\* buffers ([#3](https://github.com/jameslnewell/publish-if-not-published/issues/3))

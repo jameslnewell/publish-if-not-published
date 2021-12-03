@@ -66,7 +66,7 @@ export default async function publish(
     exec(cmd, {cwd, maxBuffer}, (execError) => {
       if (execError) {
         if (
-          /You cannot publish over the previously published versions/.test(
+          /You cannot publish over the previously published versions|Cannot publish over existing version/.test(
             execError.message,
           )
         ) {
