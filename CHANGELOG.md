@@ -1,5 +1,11 @@
 ## Change log
 
+### 3.0.0
+
+- Made tag issues exit with a non-zero exit code
+- Changed emojis
+- Include README.md in files
+
 ### 2.2.1
 
 - Updated to handle slightly modified text for already published version

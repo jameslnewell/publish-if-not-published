@@ -11,15 +11,15 @@ function formatNameAndVersion(metadata: {[name: string]: any}): string {
   )}${chalk.bold.white(metadata.version)}`;
 }
 
-const argv = yargs
-  .option('tag-check', {type: 'boolean', default: true})
-  .option('max-buffer', {type: 'number'}).argv;
-
 (async () => {
   try {
+    const argv = await yargs
+      .option('tag-check', {type: 'boolean', default: true})
+      .option('max-buffer', {type: 'number'}).argv;
+
     const {published, reason, manifest} = await publish({
       shouldCheckTag: argv['tag-check'],
-      args: argv._,
+      args: argv._.map(String),
       maxBuffer: argv['max-buffer'],
     });
 
@@ -30,7 +30,7 @@ const argv = yargs
 
     if (reason === 'private') {
       console.log(
-        `⚠️  Skipped publishing ${formatNameAndVersion(
+        `🤫  Skipped publishing ${formatNameAndVersion(
           manifest,
         )} because this package is marked as private.`,
       );
@@ -39,7 +39,7 @@ const argv = yargs
 
     if (reason === 'already-published') {
       console.log(
-        `ℹ️  Skipped publishing ${formatNameAndVersion(
+        `⏩  Skipped publishing ${formatNameAndVersion(
           manifest,
         )} because this version is already published.`,
       );
@@ -54,6 +54,7 @@ const argv = yargs
           'non-latest',
         )} tag and the version has no suffix.`,
       );
+      process.exitCode = 1;
       return;
     }
 
@@ -65,12 +66,13 @@ const argv = yargs
           'latest',
         )} but the version has an extraneous suffix.`,
       );
+      process.exitCode = 1;
       return;
     }
   } catch (error) {
     console.log(`❌ Failed to publish package:`);
     console.log();
-    console.error(error.message);
+    console.error(error instanceof Error ? error.message : error);
     process.exitCode = 1;
   }
 })();
