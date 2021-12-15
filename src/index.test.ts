@@ -16,15 +16,27 @@ describe('publish()', () => {
   const setupPackageJSON = (
     manifest: any = manifestWithNormalVersion,
   ): void => {
-    readJSONSpy.mockReturnValue(Promise.resolve(manifest));
+    readJSONSpy.mockReturnValueOnce(Promise.resolve(manifest));
   };
 
   const setupPackageJSONError = (error: any): void => {
-    readJSONSpy.mockReturnValue(Promise.reject(error));
+    readJSONSpy.mockReturnValueOnce(Promise.reject(error));
+  };
+
+  const setupNPMPublishedVersion = (versions: string[]): void => {
+    execSpy.mockImplementationOnce(function (_cmd, callback) {
+      // TODO: make args flexible
+      // eslint-disable-next-line
+      // @ts-ignore
+      callback?.(null, JSON.stringify(versions), '');
+      // eslint-disable-next-line
+      // @ts-ignore
+      return this;
+    });
   };
 
   const setupNPMPublishSuccess = (): void => {
-    execSpy.mockImplementation(function (_cmd, _opts, callback) {
+    execSpy.mockImplementationOnce(function (_cmd, _opts, callback) {
       callback?.(null, '', '');
       // eslint-disable-next-line
       // @ts-ignore
@@ -33,7 +45,7 @@ describe('publish()', () => {
   };
 
   const setupNPMPublishError = (error: child_process.ExecException): void => {
-    execSpy.mockImplementation(function (_cmd, _opts, callback) {
+    execSpy.mockImplementationOnce(function (_cmd, _opts, callback) {
       callback?.(error, '', '');
       // eslint-disable-next-line
       // @ts-ignore
@@ -52,10 +64,25 @@ describe('publish()', () => {
       private: true,
     };
     setupPackageJSON(manifest);
+    setupNPMPublishedVersion([]);
     setupNPMPublishSuccess();
     await expect(publish({})).resolves.toEqual({
       published: false,
       reason: PublishResultReason.PRIVATE,
+      manifest,
+    });
+  });
+
+  test('rejects when package is published', async () => {
+    const manifest = {
+      ...manifestWithNormalVersion,
+    };
+    setupPackageJSON(manifest);
+    setupNPMPublishedVersion(['1.2.3']);
+    setupNPMPublishSuccess();
+    await expect(publish({})).resolves.toEqual({
+      published: false,
+      reason: PublishResultReason.ALREADY_PUBLISHED,
       manifest,
     });
   });
@@ -67,6 +94,7 @@ describe('publish()', () => {
   ].forEach((args) => {
     test(`resolves with a reason when a tag is provided but the version is not a prerelease - args`, async () => {
       setupPackageJSON();
+      setupNPMPublishedVersion([]);
       setupNPMPublishSuccess();
       await expect(publish({args, shouldCheckTag: true})).resolves.toEqual({
         published: false,
@@ -76,6 +104,7 @@ describe('publish()', () => {
     });
     test('resolves without a reason when a tag is provided, the version is not a prerelease, the tag is not checked the NPM publish command is successful', async () => {
       setupPackageJSON();
+      setupNPMPublishedVersion([]);
       setupNPMPublishSuccess();
       await expect(publish({args, shouldCheckTag: false})).resolves.toEqual({
         published: true,
@@ -97,6 +126,7 @@ describe('publish()', () => {
     };
     test(`resolves with a reason when a tag is not provided but the version is a prerelease - ${version}`, async () => {
       setupPackageJSON(manifestWithPreReleaseVersion);
+      setupNPMPublishedVersion([]);
       setupNPMPublishSuccess();
       await expect(publish({shouldCheckTag: true})).resolves.toEqual({
         published: false,
@@ -106,6 +136,7 @@ describe('publish()', () => {
     });
     test('resolves without a reason when a tag is not provided, the version is a prerelease, the tag is not checked the NPM publish command is successful', async () => {
       setupPackageJSON(manifestWithPreReleaseVersion);
+      setupNPMPublishedVersion([]);
       setupNPMPublishSuccess();
       await expect(publish({shouldCheckTag: false})).resolves.toEqual({
         published: true,
@@ -117,6 +148,7 @@ describe('publish()', () => {
 
   test('resolves with a reason when the package version is already published', async () => {
     setupPackageJSON();
+    setupNPMPublishedVersion([]);
     setupNPMPublishError({
       name: 'error',
       message: 'You cannot publish over the previously published versions',
@@ -130,6 +162,7 @@ describe('publish()', () => {
 
   test('resolves without a reason when the NPM publish command is successful', async () => {
     setupPackageJSON();
+    setupNPMPublishedVersion([]);
     setupNPMPublishSuccess();
     await expect(publish({})).resolves.toEqual({
       published: true,
@@ -141,6 +174,7 @@ describe('publish()', () => {
   test('rejects when the package JSON cannot be read', async () => {
     const errorMessage = 'Uh oh!';
     setupPackageJSONError(errorMessage);
+    setupNPMPublishedVersion([]);
     setupNPMPublishSuccess();
     await expect(publish({})).rejects.toMatch(errorMessage);
   });
@@ -151,6 +185,7 @@ describe('publish()', () => {
       message: 'Uh oh!',
     };
     setupPackageJSON();
+    setupNPMPublishedVersion([]);
     setupNPMPublishError(errorMessage);
     await expect(publish({})).rejects.toEqual(errorMessage);
   });

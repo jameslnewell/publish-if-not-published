@@ -2,7 +2,7 @@ import {exec} from 'child_process';
 
 export function isPublished(name: string, version: string): Promise<boolean> {
   return new Promise((resolve, reject) => {
-    const cmd = `npm info ${name} versions --json`;
+    const cmd = `npm info --json ${name} versions`;
     exec(cmd, (execError, stdout) => {
       if (execError) {
         if (/404 Not found : .+/.test(execError.message)) {
@@ -10,7 +10,6 @@ export function isPublished(name: string, version: string): Promise<boolean> {
         } else {
           reject(execError);
         }
-        return;
       } else {
         try {
           const json = JSON.parse(stdout);

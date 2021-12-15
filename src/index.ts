@@ -1,4 +1,5 @@
 import {exec} from 'child_process';
+import {isPublished} from './isPublished';
 import {getTagFromArgs, isPrerelease, readJSON} from './utilities';
 
 export interface PublishOptions {
@@ -39,6 +40,16 @@ export default async function publish(
     return {
       published: false,
       reason: PublishResultReason.PRIVATE,
+      manifest,
+    };
+  }
+
+  // check whether we're published before the tag check because the tag check will
+  // error when there's no reason to error (we're not publishing anything)
+  if (await isPublished(manifest.name, manifest.version)) {
+    return {
+      published: false,
+      reason: PublishResultReason.ALREADY_PUBLISHED,
       manifest,
     };
   }
