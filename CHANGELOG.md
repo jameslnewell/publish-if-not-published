@@ -2,7 +2,14 @@
 
 ### 3.1.1
 
-- Fix `isPublish` check to work when a package hasn't ever been published before
+- Fix `isPublish` check to work when a package has never been published before
+
+### 3.1.0
+
+- Check whether a package version has already been published before checking
+  tags so we skip instead of erroring when we're trying to publish a pre-release
+  but the current version is a not a pre-release and has already been
+  published -
 
 ### 3.0.0
 
