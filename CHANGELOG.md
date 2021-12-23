@@ -1,8 +1,14 @@
 ## Change log
 
+### 3.1.2
+
+- Fix `isPublish` check to work when a package has never been published before
+  and a string is returned instead of an array
+
 ### 3.1.1
 
 - Fix `isPublish` check to work when a package has never been published before
+  and 404s are returned
 
 ### 3.1.0
 

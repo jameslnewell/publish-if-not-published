@@ -16,7 +16,9 @@ export function isPublished(name: string, version: string): Promise<boolean> {
       } else {
         try {
           const json = JSON.parse(stdout);
-          if (Array.isArray(json)) {
+          if (typeof json === 'string') {
+            resolve(json === version);
+          } else if (Array.isArray(json)) {
             resolve(json.includes(version));
           } else {
             reject(new Error(`"${cmd}" didn't return an array of versions.`));
