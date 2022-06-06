@@ -15,13 +15,14 @@ export function isPublished(name: string, version: string): Promise<boolean> {
         }
       } else {
         try {
-          const json = JSON.parse(stdout);
+          const json = JSON.parse(stdout ? stdout : '{}');
           if (typeof json === 'string') {
             resolve(json === version);
           } else if (Array.isArray(json)) {
             resolve(json.includes(version));
           } else {
-            reject(new Error(`"${cmd}" didn't return an array of versions.`));
+            // Empty stdout with 0 response code indicates no versions.
+            resolve(false);
           }
         } catch (parseError) {
           reject(parseError);
